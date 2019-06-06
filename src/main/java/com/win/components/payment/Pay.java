@@ -23,7 +23,7 @@ public class Pay {
                 "254701562852",
                 "254701562852",
                 "174379",
-                "http://ccd702c4.ngrok.io/payment/callback",
+                "http://ec2-54-164-187-129.compute-1.amazonaws.com:8080/payment/callback",
                 "6",
                 "EveGym"
         );

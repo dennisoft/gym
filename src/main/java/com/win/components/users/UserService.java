@@ -27,7 +27,6 @@ import java.util.*;
 
 @Service("userService")
 public class UserService {
-
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private InformationRepository informationRepository;
@@ -37,54 +36,71 @@ public class UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, InformationRepository informationRepository, SubscriptionRepository subscriptionRepository, WorkOutRepository workOutRepository, ReportRepository reportRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.informationRepository = informationRepository;
-        this.subscriptionRepository = subscriptionRepository;
-        this.workOutRepository = workOutRepository;
-        this.reportRepository = reportRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public UserService(
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            InformationRepository informationRepository,
+            SubscriptionRepository subscriptionRepository,
+            WorkOutRepository workOutRepository,
+            ReportRepository reportRepository,
+            BCryptPasswordEncoder bCryptPasswordEncoder) {
+                    this.userRepository = userRepository;
+                    this.roleRepository = roleRepository;
+                    this.informationRepository = informationRepository;
+                    this.subscriptionRepository = subscriptionRepository;
+                    this.workOutRepository = workOutRepository;
+                    this.reportRepository = reportRepository;
+                    this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Autowired
     private UserService userService;
 
-    public List<WorkOut> findWorkOutByUserID(Integer ID) {
+    private List<WorkOut> findWorkOutByUserID(Integer ID) {
         return workOutRepository.findWorkOutByUserIDOrderByWorkID(ID);
     }
 
-    public User findUserByEmail(String email) {
+    private User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-    public Information findInformationByUserID(Integer ID) {
+
+    private Information findInformationByUserID(Integer ID) {
         return informationRepository.findByUserID(ID);
     }
-    public User findUserByUserID(Integer ID) {
+
+    private User findUserByUserID(Integer ID) {
         return userRepository.findById(ID);
     }
 
-    public List<Subscription> findSubscriptionByUserID(Integer ID) {
+    private List<Subscription> findSubscriptionByUserID(Integer ID) {
         return subscriptionRepository.findSubscriptionByUserID(ID);
     }
 
-    public List<Reports> findMyReports (Integer ID) {
+    private List<Reports> findMyReports(Integer ID) {
         return reportRepository.findReportsByUserID(ID);
     }
 
-    public List<Subscription> findAllSubscriptions() {
+    private List<Subscription> findAllSubscriptions() {
         return subscriptionRepository.findAll();
     }
 
-    public Subscription findSubscriptionByMerchantRequestID(String ID) {
+    private Subscription findSubscriptionByMerchantRequestID(String ID) {
         return subscriptionRepository.findSubscriptionByMerchantRequestID(ID);
     }
 
-    public void addPaymentRecord(Subscription subscription) {
+    private void saveUser(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setActive(1);
+        Role userRole = roleRepository.findByRole("ADMIN");
+        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        userRepository.save(user);
+    }
+
+    private void addPaymentRecord(Subscription subscription) {
         subscriptionRepository.save(subscription);
     }
 
-    public void addNewWorkOut(WorkOut workOut) {
+    private void addNewWorkOut(WorkOut workOut) {
         workOutRepository.save(workOut);
     }
 
@@ -166,14 +182,6 @@ public class UserService {
             }
         }
         return modelAndView;
-    }
-
-    public void saveUser(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setActive(1);
-        Role userRole = roleRepository.findByRole("ADMIN");
-        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-        userRepository.save(user);
     }
 
     public UserResponse getUser(String userID) {
