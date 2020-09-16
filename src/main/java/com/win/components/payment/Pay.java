@@ -16,14 +16,14 @@ public class Pay {
 
         String response = mpesa.STKPushSimulation(
                 "174379",
-                "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMTkwNDAxMDgxNzQ5",
+                "",
                 "20190401081749",
                 "CustomerPayBillOnline",
                 "1",
-                "254701562852",
-                "254701562852",
+                "",
+                "",
                 "174379",
-                "http://ec2-54-164-187-129.compute-1.amazonaws.com:8080/payment/callback",
+                "http://amazonaws.com:8080/payment/callback",
                 "6",
                 "EveGym"
         );
